@@ -1,0 +1,11 @@
+import express from 'express';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const app = express();
+app.disable('x-powered-by');
+app.get('/health', (_q, r) => r.json({ ok: true }));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1h' }));
+app.get('*', (_q, r) => r.sendFile(path.join(__dirname, 'public', 'index.html')));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log('retailhawk-landing on :' + PORT));
